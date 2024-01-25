@@ -22,9 +22,9 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Build.ArtifactStagingDirectory)/js' # Adjust the source folder based on your project structure
+    SourceFolder: '$(Build.ArtifactStagingDirectory)'
     Contents: '**/*'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/react-app' # Adjust the target folder based on your project structure
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/react-app'
   displayName: 'Copy Artifacts'
 
 - task: PublishBuildArtifacts@1
