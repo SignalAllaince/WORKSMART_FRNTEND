@@ -22,14 +22,14 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Build.ArtifactStagingDirectory)'
-    Contents: '**/*'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/react-app'
-  displayName: 'Copy Artifacts'
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: '**/*.js'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/react-app' # Updated target folder
+  displayName: 'Copy JavaScript files'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/react-app'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/react-app' # Updated path
     artifactName: 'react-app'
     publishLocation: 'Container'
-  displayName: 'Publish Artifacts'
+  displayName: 'Publish Build Artifacts'
