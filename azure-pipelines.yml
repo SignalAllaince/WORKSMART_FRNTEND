@@ -20,15 +20,18 @@ steps:
     npm run build
   displayName: 'npm install and build'
 
-- task: CopyFiles@2
+- task: ArchiveFiles@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)' # Adjust the source folder based on your project structure
-    Contents: '**/*.js' # Adjust the pattern based on files you want to copy
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/js' # Adjust the target folder based on your project structure
-  displayName: 'Copy JavaScript files'
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/js'
+    includeRootFolder: false
+    archiveType: 'tar'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/artifacts.tar'
+  displayName: 'Create Tar Archive'
 
 - task: PublishBuildArtifacts@1
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'react-app'
-  displayName: 'Publish Build Artifacts'
+    publishLocation: 'Container'
+    targetPath: 'artifacts.tar'
+  displayName: 'Publish Compressed Artifacts'
