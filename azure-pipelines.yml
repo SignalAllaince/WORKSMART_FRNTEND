@@ -7,12 +7,12 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
+    versionSpec: '14.x'
   displayName: 'Install Node.js'
 
 - script: |
@@ -22,12 +22,13 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(System.DefaultWorkingDirectory)' # Assuming the build artifacts are in the default working directory
-    Contents: '**/*.js'  # Adjust this pattern based on the files you want to copy
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    SourceFolder: '$(Build.SourcesDirectory)' # Adjust the source folder based on your project structure
+    Contents: '**/*.js' # Adjust the pattern based on files you want to copy
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/js' # Adjust the target folder based on your project structure
+  displayName: 'Copy JavaScript files'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'react-app'
+  displayName: 'Publish Build Artifacts'
