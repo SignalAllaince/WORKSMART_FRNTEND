@@ -31,4 +31,5 @@ steps:
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)/react-app'
     artifactName: 'react-app'
-  displayName: 'Publish Build Artifacts'
+    publishLocation: 'Container'
+  displayName: 'Publish Artifacts'
