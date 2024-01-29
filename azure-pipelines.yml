@@ -20,17 +20,16 @@ steps:
     npm run build
   displayName: 'npm install and build'
 
-- task: CopyFiles@2
+- task: ArchiveFiles@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: '**' # Include all files and folders
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/react-app'
-    CleanTargetFolder: true
-  displayName: 'Copy all files to artifact directory'
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
 
-- task: PublishBuildArtifacts@1
+- task: PublishPipelineArtifact@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/react-app'
-    artifactName: 'react-app'
-    publishLocation: 'Container'
-  displayName: 'Publish Build Artifacts'
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'drop'
+    publishLocation: 'pipeline'
