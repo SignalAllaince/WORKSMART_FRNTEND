@@ -51,7 +51,7 @@ stages:
               steps:
                 - task: AzureWebApp@1  # Deploy to Azure Web App
                   inputs:
-                    azureSubscription: '{serviceConnection}'  # Your Azure subscription name or service connection name
+                    azureSubscription: 'Microsoft Azure Sponsorship_DIGITAL APP'  # Your Azure subscription name or service connection name
                     appName: '$(appName)'
                     slotName: 'Production'  # The name of the deployment slot to deploy to
                     package: '$(Pipeline.Workspace)/drop'  # Path to the published artifacts
