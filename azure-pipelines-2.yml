@@ -34,7 +34,7 @@ stages:
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
-        azureSubscription: 'Microsoft Azure Sponsorship_DIGITAL APP'
+        azureServiceConnectionName: 'smrtwrk'
         appType: 'webAppContainer'
         WebAppName: 'smrtwrk'  # Replace with your App Service name
         DockerNamespace: 'smrtwrk.azurecr.io'
