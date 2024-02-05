@@ -2,10 +2,15 @@
 import { useState, useRef, useEffect } from "react";
 import { Icons } from "../icons";
 
+export interface IManager {
+  id: string;
+  first_name: string;
+  last_name: string;
+}
 interface IDropSelect {
-  selectedOption: string;
-  setSelectedOption: (e: string) => void;
-  OptionsArr: string[];
+  selectedOption: string | IManager;
+  setSelectedOption: (e: string | IManager) => void;
+  OptionsArr: Array<string | IManager>;
 }
 
 export default function DropSelect({
@@ -41,7 +46,7 @@ export default function DropSelect({
     };
   }, []);
 
-  function handleOptionSelect(option: string) {
+  function handleOptionSelect(option: string | IManager) {
     setSelectedOption(option);
     setShowDropDown(false);
   }
@@ -53,21 +58,35 @@ export default function DropSelect({
       onMouseDown={handleMouseDown}
     >
       <p className="text-sm text-gray-700 font-medium">
-        {selectedOption ? selectedOption : "choose an option"}
+        {selectedOption && typeof selectedOption === "object"
+          ? `${(selectedOption as IManager).first_name} ${(selectedOption as IManager).last_name}`
+          : selectedOption}
       </p>
       <Icons.dropdown />
 
       {showDropDown && (
-        <div className="w-full min-h-24 max-h-36 overflow-y-scroll bg-white absolute left-0 top-12 border border-gray-300">
+        <div className="w-full min-h-24 max-h-36 overflow-y-scroll z-20 bg-white absolute left-0 top-12 border border-gray-300">
           {OptionsArr.map((option, index) => (
             <div
               className={`${
-                selectedOption === option ? "bg-green-200" : "bg-white"
+                selectedOption === (option as IManager).id
+                  ? "bg-green-200"
+                  : "bg-white"
               } p-2 hover:bg-gray-300 cursor-pointer`}
               key={index}
-              onClick={() => handleOptionSelect(option)}
+              onClick={() =>
+                handleOptionSelect(
+                  typeof option === "string" ? option : (option as IManager)
+                )
+              }
             >
-              <p className="text-xs">{option}</p>
+              <p className="text-xs">
+                {typeof option === "string"
+                  ? option // When option is a string
+                  : `${(option as IManager).first_name} ${
+                      (option as IManager).last_name
+                    }`}{" "}
+              </p>
             </div>
           ))}
         </div>

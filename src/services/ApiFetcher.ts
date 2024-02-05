@@ -15,8 +15,8 @@ const ApiFetcher = axios.create({
 
 const onRequest = (request: any) => {
   Nprogress.start();
-  const token = localStorage.getItem("fleetManagement_admin_token")
-    ? JSON.parse(localStorage.getItem("fleetManagement_admin_token")!)
+  const token = localStorage.getItem("worksmart_jwt")
+    ? JSON.parse(localStorage.getItem("worksmart_jwt")!)
     : null;
   request.headers.Authorization = token ? `Bearer ${token}` : "";
   return request;
