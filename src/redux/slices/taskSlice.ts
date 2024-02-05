@@ -20,7 +20,13 @@ export const taskSlice = createSlice({
       state.tasks = newTask;
       localStorage.setItem("workSmartTasks", JSON.stringify(state.tasks));
     },
+
+    deleteTask: (state, action: PayloadAction<string>) => {
+      const taskIdToDelete = action.payload;
+      state.tasks = state.tasks.filter(task => task._id !== taskIdToDelete);
+      localStorage.setItem("workSmartTasks", JSON.stringify(state.tasks));
+    },
   },
 });
 
-export const { addTask } = taskSlice.actions;
+export const { addTask, deleteTask } = taskSlice.actions;

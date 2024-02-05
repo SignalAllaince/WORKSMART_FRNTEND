@@ -15,12 +15,23 @@ const ApiFetcher = axios.create({
 
 const onRequest = (request: any) => {
   Nprogress.start();
-  const token = localStorage.getItem("worksmart_jwt")
-    ? JSON.parse(localStorage.getItem("worksmart_jwt")!)
-    : null;
-  request.headers.Authorization = token ? `Bearer ${token}` : "";
+  const token = localStorage.getItem("worksmart_jwt");
+
+  if (token) {
+    // Parse the token only if it exists in localStorage
+    try {
+      const parsedToken = JSON.parse(token);
+      request.headers.Authorization = `Bearer ${parsedToken}`;
+    } catch (error) {
+      // Handle JSON parsing error (if any)
+      console.error("Error parsing JWT token:", error);
+      request.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+
   return request;
 };
+
 
 const onRequestError = (error: any) => {
   Nprogress.done();

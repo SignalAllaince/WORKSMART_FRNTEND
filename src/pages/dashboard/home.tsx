@@ -10,18 +10,38 @@ import HomeTable from "./dashBoardTable";
 import DonutChart from "../../components/donutChart/Chart";
 import CalendarComponent from "./Calendar";
 import UpcomingEvents from "./UpcomingEvents";
+import { useQuery, useQueryClient } from "react-query";
+import ApiFetcher from "../../services/ApiFetcher";
 
 export default function Home() {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+
+  const getTodos = async () => {
+    const response = await ApiFetcher.get('/tasks')
+    return response.data 
+  }
+  const query = useQuery({ queryKey: ['todos'], queryFn: getTodos })
+
+ 
+
+  const tasks: ITask[] = query.isSuccess ? query.data.data.tasks : []
 
   const handleOpenModal = () => {
     setOpenModal(true);
     console.log(openModal);
   };
 
+  const refresh = () => {
+    queryClient.invalidateQueries('todos');
+  }
+
   const handleCloseModal = () => {
     setOpenModal(false);
+    // Invalidate the 'todos' query to trigger a refetch
+    refresh()
   };
+  
 
   const user: IUser = useSelector((state: any) => state.user.user);
 
@@ -140,7 +160,7 @@ export default function Home() {
             </div>
 
             <div className="w-full p-2 rounded-[10px] bg-[rgba(255,255,255,0.10)] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.10)] mt-6">
-              <HomeTable tableRow={allTasks} />
+              <HomeTable tableRow={tasks} refresh={refresh} />
             </div>
           </div>
 

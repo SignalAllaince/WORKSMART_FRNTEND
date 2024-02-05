@@ -1,8 +1,51 @@
+import { useMutation } from "react-query";
 import { Icons } from "../../components/icons";
 import { formatDate } from "../../helpers/date";
 import { IHomeTable } from "../dashboard/dashBoardTable";
+import ApiFetcher from "../../services/ApiFetcher";
+import { enqueueSnackbar } from "notistack";
+import { useEffect } from "react";
 
-export default function TaskTable({ tableRow }: IHomeTable) {
+export default function TaskTable({ tableRow, refresh }: IHomeTable) {
+  const handleDelete = async (id: string) => {
+    const response = await ApiFetcher.delete(`/task/${id}/delete`);
+    return response.data;
+  };
+  const { mutate: delete_Task, isSuccess } = useMutation(
+    (id: string) => {
+      return handleDelete(id); // Make sure to return the result of handleDelete
+    },
+    {
+      onSuccess: (data) => {
+        enqueueSnackbar(`${data.message}`, {
+          variant: "success",
+          anchorOrigin: { vertical: "top", horizontal: "right" },
+        });
+      },
+      onError: (error: any) => {
+        if (Array.isArray(error.response.data.error)) {
+          error.response.data.error.forEach((el: any) =>
+            enqueueSnackbar(`${el.message}`, {
+              variant: "error",
+              anchorOrigin: { vertical: "top", horizontal: "right" },
+            })
+          );
+        } else {
+          enqueueSnackbar(`${error.response.data.message}`, {
+            variant: "error",
+            anchorOrigin: { vertical: "top", horizontal: "right" },
+          });
+        }
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (isSuccess) {
+      refresh();
+    }
+  }, [isSuccess]);
+
   return (
     <table className="w-full relative">
       <thead className="bg-primary-hover">
@@ -52,7 +95,10 @@ export default function TaskTable({ tableRow }: IHomeTable) {
                 <div className="flex justify-start items-center gap-[10px]">
                   <Icons.dropdownCircle className="hover:scale-110 h-4 w-4 transition-all cursor-pointer" />
                   <Icons.edit className="hover:scale-110 transition-all h-4 w-4  cursor-pointer" />
-                  <Icons.trash className="hover:scale-110 transition-all h-5 w-5  cursor-pointer" />
+                  <Icons.trash
+                    className="hover:scale-110 transition-all h-5 w-5  cursor-pointer"
+                    onClick={() => delete_Task(column._id)}
+                  />
                 </div>
               </td>
             </tr>
@@ -60,7 +106,12 @@ export default function TaskTable({ tableRow }: IHomeTable) {
         </tbody>
       ) : (
         <div className="absolute !w-full !mx-auto py-16 flex !justify-center items-center">
-          <p className="text-sm">No task available <em className="text-primary-bold">click on the create task button to add a new task.</em></p>
+          <p className="text-sm">
+            No task available{" "}
+            <em className="text-primary-bold">
+              click on the create task button to add a new task.
+            </em>
+          </p>
         </div>
       )}
     </table>

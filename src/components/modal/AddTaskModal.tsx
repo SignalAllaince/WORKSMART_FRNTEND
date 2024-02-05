@@ -7,7 +7,7 @@ import { dropIn } from "../../helpers/framer-variants";
 import { Icons } from "../icons";
 import Input from "../formComponents/Input";
 import DateSelect from "../datepicker/DatePicker";
-import DropSelect, { IManager } from "../dropdown/DropDown";
+import DropSelect from "../dropdown/DropDown";
 import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../../redux/slices/taskSlice";
 import { ITask, IUser } from "../../interfaces";
@@ -19,6 +19,9 @@ import { enqueueSnackbar } from "notistack";
 import ApiFetcher from "../../services/ApiFetcher";
 import ReactLoading from "react-loading";
 import TextArea from "../formComponents/TextArea";
+import SelectManagerDropDown, {
+  IManager,
+} from "../dropdown/SelectManagerDropDown";
 
 interface IAddTaskModal {
   onClose(): void;
@@ -30,6 +33,7 @@ export default function AddTaskModal({ onClose }: IAddTaskModal) {
   const [approver, setApprover] = useState<IManager | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [managers, setManagers] = useState<null | IManager[]>(null);
+
   const taskSchema = object({
     title: string().min(1, "Task title is required").max(100),
     description: string().min(1, "Description is required").max(250),
@@ -54,10 +58,17 @@ export default function AddTaskModal({ onClose }: IAddTaskModal) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful]);
 
-  const user:IUser = useSelector((state:any)=>state.user.user)
+  const user: IUser = useSelector((state: any) => state.user.user);
 
   const handleAddTask = async (taskData: TaskInput) => {
-    const taskDetails = {...taskData, "user_id": user.id, "approver":approver && approver?.id, priority, due_date, "progress": 'IN_PROGRESS'}
+    const taskDetails = {
+      ...taskData,
+      user_id: user.id,
+      approver: approver && approver?._id,
+      priority,
+      due_date,
+      progress: "IN_PROGRESS",
+    };
     const response = await ApiFetcher.post("/task/create", taskDetails);
     return response.data;
   };
@@ -68,11 +79,8 @@ export default function AddTaskModal({ onClose }: IAddTaskModal) {
     data,
     isSuccess,
   } = useMutation((taskData: TaskInput) => handleAddTask(taskData), {
-    onMutate(_variables) {
-      setLoading(true);
-    },
+    onMutate(_variables) {},
     onSuccess(data) {
-      setLoading(false);
       enqueueSnackbar(`${data.message}`, {
         variant: "success",
         anchorOrigin: { vertical: "top", horizontal: "right" },
@@ -96,9 +104,13 @@ export default function AddTaskModal({ onClose }: IAddTaskModal) {
     },
   });
 
-  if (isSuccess) {
-    dispatch(addTask(data.data as ITask));
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      // Dispatch the task when isSuccess changes
+      dispatch(addTask(data.data as ITask));
+      onClose()
+    }
+  }, [isSuccess, data, dispatch]);
 
   const onSubmitHandler: SubmitHandler<TaskInput> = (values) => {
     // ? Execute the Mutation
@@ -113,9 +125,9 @@ export default function AddTaskModal({ onClose }: IAddTaskModal) {
     return response.data;
   };
 
-  const {
-    data: managersData
-  } = useQuery(["managers"], () => getManagers());
+  const { data: managersData, isLoading } = useQuery(["managers"], () =>
+    getManagers()
+  );
 
   // Use useEffect to set managers only when data is available
   useEffect(() => {
@@ -162,10 +174,11 @@ export default function AddTaskModal({ onClose }: IAddTaskModal) {
               <p className="text-sm text-gray-700 leading-5 font-medium">
                 Approver
               </p>
-              <DropSelect
-                selectedOption={approver as IManager}
+              <SelectManagerDropDown
+                selectedOption={approver}
                 setSelectedOption={(e) => setApprover(e as IManager)}
                 OptionsArr={managers as IManager[]}
+                isLoading={isLoading}
               />
             </div>
             <div className="w-[48%]">
@@ -190,7 +203,7 @@ export default function AddTaskModal({ onClose }: IAddTaskModal) {
               </p>
               <DropSelect
                 selectedOption={priority}
-                setSelectedOption={(e) => setPriority(e as string)}
+                setSelectedOption={(e: string) => setPriority(e)}
                 OptionsArr={priorityArr}
               />
             </div>
@@ -200,10 +213,7 @@ export default function AddTaskModal({ onClose }: IAddTaskModal) {
             <label htmlFor="" className="text-gray-700 text-sm font-medium">
               Description*
             </label>
-            <TextArea
-              name="description"
-              placeholder="Description"
-              />
+            <TextArea name="description" placeholder="Description" />
           </div>
 
           <div className="w-full mt-4">

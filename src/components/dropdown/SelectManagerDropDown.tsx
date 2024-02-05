@@ -2,16 +2,23 @@
 import { useState, useRef, useEffect } from "react";
 import { Icons } from "../icons";
 
+export interface IManager {
+  _id: string;
+  first_name: string;
+  last_name: string;
+}
 interface IDropSelect {
-  selectedOption: string;
-  setSelectedOption: (e: string) => void;
-  OptionsArr: Array<string>;
+  selectedOption: IManager | null;
+  setSelectedOption: (e: IManager) => void;
+  OptionsArr: Array<IManager>;
+  isLoading: boolean;
 }
 
-export default function DropSelect({
+export default function SelectManagerDropDown({
   selectedOption,
   setSelectedOption,
   OptionsArr,
+  isLoading,
 }: IDropSelect) {
   const [showDropDown, setShowDropDown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -41,7 +48,7 @@ export default function DropSelect({
     };
   }, []);
 
-  function handleOptionSelect(option: string) {
+  function handleOptionSelect(option: IManager) {
     setSelectedOption(option);
     setShowDropDown(false);
   }
@@ -52,7 +59,14 @@ export default function DropSelect({
       className="w-full cursor-pointer relative border !border-gray-300 rounded-lg h-11 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex justify-between items-center px-4"
       onMouseDown={handleMouseDown}
     >
-      <p className="text-sm text-gray-700 font-medium">{selectedOption}</p>
+      <p className="text-sm text-gray-700 font-medium">
+        {isLoading
+          ? "Loading..."
+          : selectedOption
+          ? `${selectedOption.first_name} ${selectedOption.last_name}`
+          : "Select Approver"}
+      </p>
+
       <Icons.dropdown />
 
       {showDropDown && (
@@ -60,17 +74,29 @@ export default function DropSelect({
           {OptionsArr.map((option, index) => (
             <div
               className={`${
-                selectedOption === option ? "bg-green-200" : "bg-white"
+                selectedOption?._id === option._id ? "bg-green-200" : "bg-white"
               } p-2 hover:bg-gray-300 cursor-pointer`}
               key={index}
               onClick={() => handleOptionSelect(option)}
             >
               <p className="text-xs">
-                {option}{" "}
+                {typeof option === "string"
+                  ? option // When option is a string
+                  : `${(option as IManager).first_name} ${
+                      (option as IManager).last_name
+                    }`}{" "}
               </p>
             </div>
           ))}
         </div>
+      )}
+
+      {isLoading && (
+        <button
+          className="absolute w-full z-40 bg-transparent h-full left-0 top-0  disabled:cursor-not-allowed"
+          disabled
+        >
+        </button>
       )}
     </div>
   );

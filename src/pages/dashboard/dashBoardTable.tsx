@@ -1,10 +1,56 @@
 import { ITask } from "../../interfaces";
 import { Icons } from "../../components/icons";
+import { useMutation } from "react-query";
+import ApiFetcher from "../../services/ApiFetcher";
+import { enqueueSnackbar } from "notistack";
+import { useEffect } from "react";
 
 export interface IHomeTable {
   tableRow: ITask[];
+  refresh: () => void;
 }
-export default function HomeTable({ tableRow }: IHomeTable) {
+export default function HomeTable({ tableRow, refresh }: IHomeTable) {
+  const handleDelete = async (id: string) => {
+    const response = await ApiFetcher.delete(`/task/${id}/delete`);
+    return response.data;
+  };
+  const { mutate: delete_Task, isSuccess } = useMutation(
+    (id: string) => {
+      return handleDelete(id); // Make sure to return the result of handleDelete
+    },
+    {
+      onSuccess: (data) => {
+        enqueueSnackbar(`${data.message}`, {
+          variant: "success",
+          anchorOrigin: { vertical: "top", horizontal: "right" },
+        });
+      },
+      onError: (error: any) => {
+        if (Array.isArray(error.response.data.error)) {
+          error.response.data.error.forEach((el: any) =>
+            enqueueSnackbar(`${el.message}`, {
+              variant: "error",
+              anchorOrigin: { vertical: "top", horizontal: "right" },
+            })
+          );
+        } else {
+          enqueueSnackbar(`${error.response.data.message}`, {
+            variant: "error",
+            anchorOrigin: { vertical: "top", horizontal: "right" },
+          });
+        }
+      },
+    }
+  );
+
+  // const dispatch = useDispatch();
+
+  useEffect(()=>{
+    if(isSuccess){
+      refresh()
+    }
+  },[isSuccess])
+
   return (
     <table className="w-full">
       <thead className="bg-primary-hover">
@@ -16,8 +62,8 @@ export default function HomeTable({ tableRow }: IHomeTable) {
         </tr>
       </thead>
       <tbody>
-        {tableRow.map((column, index) => (
-          <tr key={index} className="h-5 hover:bg-gray-50">
+        {tableRow?.map((column, _index) => (
+          <tr key={column._id} className="h-5 hover:bg-gray-50">
             <td className="text-start p-[10px] text-sm">{column.title}</td>
             <td className="text-center p-[10px] text-sm">{column.priority}</td>
             <td className="text-center p-[10px] text-sm ">
@@ -39,8 +85,11 @@ export default function HomeTable({ tableRow }: IHomeTable) {
             </td>
             <td>
               <div className="flex justify-start items-center gap-[10px]">
-                <Icons.edit className="hover:scale-110 transition-all cursor-pointer"/>
-                <Icons.trash className="hover:scale-110 transition-all cursor-pointer"/>
+                <Icons.edit className="hover:scale-110 transition-all cursor-pointer" />
+                <Icons.trash
+                  className="hover:scale-110 transition-all cursor-pointer"
+                  onClick={() =>delete_Task(column._id)}
+                />
               </div>
             </td>
           </tr>

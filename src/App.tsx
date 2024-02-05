@@ -15,12 +15,12 @@ function App() {
     <main>
       <Router>
         <Routes>
-          <Route path="/auth" element={<PublicRoute />}>
+          <Route path="/" element={<PublicRoute />}>
             <Route path="/auth/register" element={<Register />} />
             <Route path="/auth/login" element={<Login />} />
           </Route>
 
-          <Route path="/" element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Home />}></Route>
             <Route path="/dashboard/task" element={<Task />}></Route>
             <Route path="/dashboard/manager" element={<ManagerRoute />}>

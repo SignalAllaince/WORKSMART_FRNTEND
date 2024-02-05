@@ -4,21 +4,39 @@ import Layout from "../../components/layout/Layout";
 import { useState } from "react";
 import TaskTable from "./TaskTable";
 import { ITask } from "../../interfaces";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import BackDrop from "../../components/modal/BackDrop";
 import AddTaskModal from "../../components/modal/AddTaskModal";
+import { useQuery, useQueryClient } from "react-query";
+import ApiFetcher from "../../services/ApiFetcher";
 
 export default function Task() {
   const [filterBy, setFilterBy] = useState("All");
-  const allTasks: ITask[] = useSelector((state: any) => state.task.tasks);
+  // const allTasks: ITask[] = useSelector((state: any) => state.task.tasks);
   const [openModal, setOpenModal] = useState<boolean>(false);
+
+  const queryClient = useQueryClient();
+
+  const getTodos = async () => {
+    const response = await ApiFetcher.get('/tasks')
+    return response.data 
+  }
+  const query = useQuery({ queryKey: ['todos'], queryFn: getTodos })
+  const tasks_: ITask[] = query.isSuccess ? query.data.data.tasks : []
+
 
   const handleOpenModal = () => {
     setOpenModal(true);
   };
 
+  const refresh = () => {
+    queryClient.invalidateQueries('todos');
+  }
+
   const handleCloseModal = () => {
     setOpenModal(false);
+    // Invalidate the 'todos' query to trigger a refetch
+    refresh()
   };
 
   const handleFilterOption = (filter: string) => {
@@ -34,29 +52,29 @@ export default function Task() {
     "Approved",
   ];
 
-  let tasks: ITask[];
+  // let tasks: ITask[];
 
-  switch (filterBy) {
-    case "In Progress":
-      tasks = allTasks.filter((task) => task.progress === "In Progress");
-      break;
+  // switch (filterBy) {
+  //   case "In Progress":
+  //     tasks = allTasks.filter((task) => task.progress === "In Progress");
+  //     break;
 
-    case "Not Started":
-      tasks = allTasks.filter((task) => task.progress === "Not Started");
-      break;
+  //   case "Not Started":
+  //     tasks = allTasks.filter((task) => task.progress === "Not Started");
+  //     break;
 
-    case "Pending Approval":
-      tasks = allTasks.filter((task) => task.progress === "Pending Approval");
-      break;
+  //   case "Pending Approval":
+  //     tasks = allTasks.filter((task) => task.progress === "Pending Approval");
+  //     break;
 
-    case "Completed":
-      tasks = allTasks.filter((task) => task.progress === "Completed");
-      break;
+  //   case "Completed":
+  //     tasks = allTasks.filter((task) => task.progress === "Completed");
+  //     break;
 
-    default:
-      tasks = allTasks;
-      break;
-  }
+  //   default:
+  //     tasks = allTasks;
+  //     break;
+  // }
 
   return (
     <Layout>
@@ -109,7 +127,7 @@ export default function Task() {
         </FlexCard>
 
         <div className="w-full mt-9 p-2 rounded-[10px] bg-[rgba(255,255,255,0.10)] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.10)]">
-          <TaskTable tableRow={tasks} />
+          <TaskTable tableRow={tasks_} refresh={refresh} />
         </div>
 
         {openModal && (
