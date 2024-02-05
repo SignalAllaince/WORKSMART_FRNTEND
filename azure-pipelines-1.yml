@@ -1,0 +1,58 @@
+# Node.js with React
+# Build a Node.js project that uses React.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+
+- main  # This assumes you want to trigger the pipeline on changes to the main branch. Modify as needed.
+
+pool:
+  vmImage: 'ubuntu-latest'  # Use the Ubuntu VM image
+
+variables:
+  appName: 'smwork'  # Name of your Azure Web App Service
+  buildArtifactStagingDirectory: '$(Build.ArtifactStagingDirectory)'
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildJob
+        steps:
+          - task: NodeTool@0  # Ensure Node.js is available on the agent
+            inputs:
+              versionSpec: '18.x'  # Use Node.js version 18.x (or adjust to your preferred version)
+            displayName: 'Install Node.js'
+
+          - script: |
+              npm install  # Install dependencies
+              npm build  # Build the Vite project for production
+            displayName: 'Build Vite React App'
+
+          - task: CopyFiles@2  # Copy built files to staging directory
+            inputs:
+              sourceFolder: 'dist'  # Vite's default output folder. Adjust if you've customized the output directory.
+              targetFolder: '$(buildArtifactStagingDirectory)'
+            displayName: 'Copy Built Files to Staging Directory'
+
+          - task: PublishBuildArtifacts@1  # Publish the built assets so they can be picked up by the deployment job
+            inputs:
+              pathToPublish: '$(buildArtifactStagingDirectory)'
+              artifactName: 'drop'
+            displayName: 'Publish Build Artifacts'
+
+  - stage: Deploy
+    jobs:
+      - deployment: DeployJob
+        environment: 'Production'  # Adjust if you have specific environments set up in Azure DevOps
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureWebApp@1  # Deploy to Azure Web App
+                  inputs:
+                    azureSubscription: 'Microsoft Azure Sponsorship_DIGITAL APP'  # Your Azure subscription name or service connection name
+                    appName: '$(appName)'
+                    slotName: 'Production'  # The name of the deployment slot to deploy to
+                    package: '$(Pipeline.Workspace)/drop'  # Path to the published artifacts
+                  displayName: 'Deploy to Azure Web App Service'
