@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { IUser } from "../interfaces";
 
 export default function PublicRoute() {
-    // const isLoggedIn = auth.isLoggedIn;
-    const auth = useSelector((state: any) => state.user.isLoggedIn);
-    const isLoggedIn = auth;
-    return(  isLoggedIn ? <Navigate to="/dashboard" /> : <Outlet />)
-  }
+  const user: IUser = useSelector((state: any) => state.user.user);
+  const authenticated = user?.isVerified;
+  return authenticated ? <Navigate to="/dashboard" /> : <Outlet />;
+}

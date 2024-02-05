@@ -2,8 +2,8 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import { IUser } from "../interfaces";
 
-export default function PrivateRoute() {
+export default function ManagerRoute() {
   const user:IUser = useSelector((state: any) => state.user.user);
-  const authenticated = user?.isVerified;
-  return !authenticated ? <Navigate to="/auth/register" /> : <Outlet />;
+  const authorized = user?.role !== "Member";
+  return !authorized ? <Navigate to="/dashboard" /> : <Outlet />;
 }

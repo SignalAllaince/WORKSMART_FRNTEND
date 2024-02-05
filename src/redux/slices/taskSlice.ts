@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ITask } from "../../interfaces";
-import { enqueueSnackbar } from "notistack";
 
 interface IInitialState {
   tasks: ITask[];
@@ -20,10 +19,6 @@ export const taskSlice = createSlice({
       const newTask = [...state.tasks, action.payload];
       state.tasks = newTask;
       localStorage.setItem("workSmartTasks", JSON.stringify(state.tasks));
-      enqueueSnackbar(`New task added successfully`, {
-        variant: "success",
-        anchorOrigin: { vertical: "top", horizontal: "right" },
-      });
     },
   },
 });

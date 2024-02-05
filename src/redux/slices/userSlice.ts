@@ -1,14 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { IUser } from "../../interfaces";
 
-export interface IUser {
-  user: {
-    email: string;
-    level: string;
-  };
+ interface IInitialState {
+  user: IUser | null;
   isLoggedIn: boolean;
 }
 
-const initialState: IUser = {
+const initialState: IInitialState = {
   user: localStorage.getItem("workSmartUser")
     ? JSON.parse(localStorage.getItem("workSmartUser")!)
     : null,
@@ -21,10 +19,7 @@ export const userSlice = createSlice({
   reducers: {
     loginUser: (
       state,
-      action: PayloadAction<{
-        email: string;
-        level: string;
-      }>
+      action: PayloadAction<IUser>
     ) => {
       state.user = action.payload;
       localStorage.setItem("workSmartUser", JSON.stringify(state.user));

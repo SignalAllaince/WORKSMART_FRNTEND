@@ -1,5 +1,8 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Icons } from "../icons";
+import { useSelector } from "react-redux";
+import { IUser } from "../../interfaces";
+import { enqueueSnackbar } from "notistack";
 
 interface ISideNav {
   label: string;
@@ -25,21 +28,37 @@ export default function SideNav() {
       icon: <Icons.team />,
       iconActive: <Icons.teamActive />,
       label: "Team",
-      link: "/dashboard/team",
+      link: "/dashboard/manager/team",
     },
     {
       icon: <Icons.request />,
       iconActive: <Icons.requestActive />,
       label: "Request",
-      link: "/dashboard/request",
+      link: "/dashboard/manager/request",
     },
   ];
 
   const location = useLocation();
+  const user: IUser = useSelector((state: any) => state.user.user);
+  const navigate = useNavigate();
+
+  const handleClick = (index: number, link: string) => {
+    if (index > 1 && user.role === "Member") {
+      enqueueSnackbar(`Not authorized`, {
+        variant: "error",
+        anchorOrigin: { vertical: "top", horizontal: "right" },
+      });
+    } else {
+      navigate(link);
+    }
+  };
   return (
     <div className="w-[17.29vw] px-5 fixed left-0 top-0 shadow-[4px_0px_20px_0px_rgba(0,0,0,0.05)] h-screen pt-28">
       {sideNavArr.map((navItem, index) => (
-        <Link to={navItem.link} key={index}>
+        <div
+          className={`${index > 1 && user.role === "Member" && "hidden"} cursor-pointer`}
+          onClick={() => handleClick(index, navItem.link)}
+        >
           <div
             className={`${
               location.pathname === navItem.link &&
@@ -53,7 +72,7 @@ export default function SideNav() {
             </div>
             <p className="text-sm ">{navItem.label}</p>
           </div>
-        </Link>
+        </div>
       ))}
     </div>
   );

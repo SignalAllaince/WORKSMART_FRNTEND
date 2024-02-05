@@ -3,8 +3,6 @@ export interface ITask {
   approver: string;
   dueDate: Date | null;
   priority: string;
-  project: string;
-  account: string;
   description: string;
   progress: TaskProgress;
 }
@@ -25,4 +23,13 @@ export enum TaskProgress {
   PENDING_APPROVAL = "Pending Approval",
   APPROVED = "Approved",
   NOT_STARTED = "Not Started",
+}
+export interface IUser {
+  first_name: string,
+  last_name: string,
+  email: string,
+  id: string,
+  isVerified: boolean,
+  isAdmin: boolean,
+  role: string,
 }

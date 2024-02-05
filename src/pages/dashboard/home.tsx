@@ -5,7 +5,7 @@ import { useState } from "react";
 import BackDrop from "../../components/modal/BackDrop";
 import AddTaskModal from "../../components/modal/AddTaskModal";
 import { useSelector } from "react-redux";
-import { ITask } from "../../interfaces";
+import { ITask, IUser } from "../../interfaces";
 import HomeTable from "./dashBoardTable";
 import DonutChart from "../../components/donutChart/Chart";
 import CalendarComponent from "./Calendar";
@@ -22,6 +22,8 @@ export default function Home() {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  const user: IUser = useSelector((state: any) => state.user.user);
 
   const allTasks: ITask[] = useSelector((state: any) => state.task.tasks);
 
@@ -81,7 +83,7 @@ export default function Home() {
           <div>
             <h2 className="text-lg font-semibold text-black">Dashboard</h2>
             <p className="text-sm font-light">
-              Hello Femi, hope you’re having a good day.
+              Hello <strong>{user?.first_name} {user?.last_name}</strong>, hope you’re having a good day.
             </p>
           </div>
 

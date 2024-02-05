@@ -1,10 +1,13 @@
 import { useSelector } from "react-redux";
 import { sath } from "../../assets";
 import { Icons } from "../icons";
-import { IUser } from "../../redux/slices/userSlice";
+import { IUser } from "../../interfaces";
 
 export default function Nav() {
-  const user:IUser = useSelector((state:any) => state.user)
+  const user:IUser = useSelector((state:any) => state.user.user)
+
+  const firstLetter = user.first_name.split("")[0]
+  const lastLetter = user.last_name.split("")[0]
 
   console.log(user)
   return (
@@ -17,8 +20,10 @@ export default function Nav() {
       
       <div className="flex justify-start items-center">
         <Icons.notification/>
-        <p className="ml-8">{user.user.email}</p>
-        <div className="w-6 h-6 border border-black ml-4 rounded-full"></div>
+        <p className="ml-8">{user.email}</p>
+        <div className="w-8 h-8 bg-gray-100 flex justify-center items-center text-primary-bold font-bold ml-4 rounded-full">
+          <p>{firstLetter}{lastLetter}</p>
+        </div>
         <Icons.dropdownBlue className="ml-[0.8rem]"/>
       </div>
     </nav>

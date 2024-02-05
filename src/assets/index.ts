@@ -1,4 +1,4 @@
-import bg from "./bg.webp";
+import bg from "./worksmartbg.svg";
 import sath from "./sath.svg";
 import Party from "./Party.svg";
 import approver from "./approver.svg";
