@@ -20,7 +20,7 @@ stages:
       inputs:
         command: 'buildAndPush'
         repository: 'smrtwrk.azurecr.io/smartworkapp'
-        dockerfile: '**/Dockerfile'
+        dockerfile: '/Dockerfile'
         tags: 'latest'
         DockerRegistry: 'smrtwrk'
         buildContext: '.'
