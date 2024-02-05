@@ -22,7 +22,7 @@ stages:
         repository: 'smrtwrk.azurecr.io/smartworkapp'
         dockerfile: '**/Dockerfile'
         tags: 'latest'
-        containerRegistry: 'smrtwrk'
+        DockerRegistry: 'smrtwrk'
         buildContext: '.'
 
 - stage: Deploy
