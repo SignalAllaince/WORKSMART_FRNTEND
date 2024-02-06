@@ -19,11 +19,10 @@ export interface IMember {
 
 
 export enum TaskProgress {
-  IN_PROGRESS = "In Progress",
-  COMPLETED = "Completed",
-  PENDING_APPROVAL = "Pending Approval",
-  APPROVED = "Approved",
-  NOT_STARTED = "Not Started",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  APPROVED = "APPROVED",
+  NOT_STARTED="NOT_STARTED"
 }
 export interface IUser {
   first_name: string,

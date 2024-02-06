@@ -18,14 +18,12 @@ export default function Home() {
   const queryClient = useQueryClient();
 
   const getTodos = async () => {
-    const response = await ApiFetcher.get('/tasks')
-    return response.data 
-  }
-  const query = useQuery({ queryKey: ['todos'], queryFn: getTodos })
+    const response = await ApiFetcher.get("/tasks");
+    return response.data;
+  };
+  const query = useQuery({ queryKey: ["todos"], queryFn: getTodos });
 
- 
-
-  const tasks: ITask[] = query.isSuccess ? query.data.data.tasks : []
+  const tasks: ITask[] = query.isSuccess ? query.data.data.tasks : [];
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -33,41 +31,40 @@ export default function Home() {
   };
 
   const refresh = () => {
-    queryClient.invalidateQueries('todos');
-  }
+    queryClient.invalidateQueries("todos");
+  };
 
   const handleCloseModal = () => {
     setOpenModal(false);
     // Invalidate the 'todos' query to trigger a refetch
-    refresh()
+    refresh();
   };
-  
 
   const user: IUser = useSelector((state: any) => state.user.user);
 
-  const allTasks: ITask[] = useSelector((state: any) => state.task.tasks);
+  const allTasks = tasks.length;
 
-  const notStartedTask = allTasks.filter(
-    (task) => task.progress === "Not Started"
-  );
-  const completedTask = allTasks.filter(
-    (task) => task.progress === "Completed"
-  );
+  const inProgress = tasks.filter(
+    (task) => task.progress === "IN_PROGRESS"
+  ).length;
 
-  const inProgress = allTasks.filter((task) => task.progress === "In Progress");
+  const completed = tasks.filter(
+    (task) => task.progress === "COMPLETED"
+  ).length;
 
-  const pendingApproval = allTasks.filter(
-    (task) => task.progress === "Pending Approval"
-  );
+  const notStarted = tasks.filter(
+    (task) => task.progress === "NOT_STARTED"
+  ).length;
 
-  const approvedTask = allTasks.filter((task) => task.progress === "Approved");
+  const approved = tasks.filter(
+    (task) => task.progress === "APPROVED"
+  ).length;
 
   const chartData = [
-    notStartedTask.length,
-    completedTask.length,
-    inProgress.length,
-    pendingApproval.length,
-    approvedTask.length,
+    inProgress,
+    notStarted,
+    completed,
+    approved,
   ];
 
   const keys = [
@@ -103,7 +100,11 @@ export default function Home() {
           <div>
             <h2 className="text-lg font-semibold text-black">Dashboard</h2>
             <p className="text-sm font-light">
-              Hello <strong>{user?.first_name} {user?.last_name}</strong>, hope you’re having a good day.
+              Hello{" "}
+              <strong>
+                {user?.first_name} {user?.last_name}
+              </strong>
+              , hope you’re having a good day.
             </p>
           </div>
 
@@ -128,26 +129,36 @@ export default function Home() {
             >
               {index === 0 ? (
                 <p className="text-4xl text-primary-bold font-medium">
-                  {allTasks.length}
+                  {allTasks}
                 </p>
               ) : index === 1 ? (
                 <p className="text-4xl text-primary-bold font-medium">
-                  {notStartedTask.length}
+                  {inProgress}
                 </p>
               ) : index === 2 ? (
                 <p className="text-4xl text-primary-bold font-medium">
-                  {completedTask.length}
+                  {completed}
                 </p>
               ) : index === 3 ? (
                 <p className="text-4xl text-primary-bold font-medium">
-                  {inProgress.length}
+                  {notStarted}
                 </p>
               ) : (
                 <p className="text-4xl text-primary-bold font-medium">
-                  {pendingApproval.length}
+                  {approved}
                 </p>
               )}
-              <p className="text-primary-bold text-md">Tasks</p>
+              <p className="text-primary-bold text-md">
+                {index === 0
+                  ? "Task"
+                  : index === 1
+                  ? "In progress"
+                  : index === 2
+                  ? "completed"
+                  : index === 3
+                  ? "Not Started"
+                  : "Approved"}
+              </p>
             </div>
           ))}
         </div>
@@ -183,9 +194,12 @@ export default function Home() {
           </div>
         </div>
 
-        <FlexCard className="!items-start !mt-9">
-          <CalendarComponent/>
-          <UpcomingEvents/>  
+        <FlexCard className="relative !items-start !mt-9">
+          <CalendarComponent />
+          <UpcomingEvents />
+          <div className="absolute left-0 top-0 w-full h-full backdrop-blur-sm flex justify-center items-center font-bold text-center">
+            Coming soon
+          </div>
         </FlexCard>
 
         {openModal && (

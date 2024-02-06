@@ -4,6 +4,7 @@ import { useMutation } from "react-query";
 import ApiFetcher from "../../services/ApiFetcher";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
+import { table } from "console";
 
 export interface IHomeTable {
   tableRow: ITask[];
@@ -45,11 +46,11 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
 
   // const dispatch = useDispatch();
 
-  useEffect(()=>{
-    if(isSuccess){
-      refresh()
+  useEffect(() => {
+    if (isSuccess) {
+      refresh();
     }
-  },[isSuccess])
+  }, [isSuccess]);
 
   return (
     <table className="w-full">
@@ -62,38 +63,45 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
         </tr>
       </thead>
       <tbody>
-        {tableRow?.map((column, _index) => (
-          <tr key={column._id} className="h-5 hover:bg-gray-50">
-            <td className="text-start p-[10px] text-sm">{column.title}</td>
-            <td className="text-center p-[10px] text-sm">{column.priority}</td>
-            <td className="text-center p-[10px] text-sm ">
-              <div
-                className={`${
-                  column.progress === "In Progress"
-                    ? "text-[#1CB8F0] bg-[#E6F4FB]"
-                    : column.progress === "Not Started"
-                    ? "text-[#9C3233] bg-[#E0BFC0]"
-                    : column.progress === "Pending Approval"
-                    ? "text-[#D79A54] bg-[#F6F3F0]"
-                    : column.progress === "Completed"
-                    ? "text-[#000] bg-[rgba(64,64,64,0.38)]"
-                    : "text-[#61D766] bg-[#EDF6F0]"
-                } w-[90%] h-[90%] p-[4px] text-xs rounded-md`}
-              >
-                {column.progress}
-              </div>{" "}
-            </td>
-            <td>
-              <div className="flex justify-start items-center gap-[10px]">
-                <Icons.edit className="hover:scale-110 transition-all cursor-pointer" />
-                <Icons.trash
-                  className="hover:scale-110 transition-all cursor-pointer"
-                  onClick={() =>delete_Task(column._id)}
-                />
-              </div>
-            </td>
-          </tr>
-        ))}
+        {tableRow.length > 0 ? (
+          tableRow?.map((column, _index) => (
+            <tr key={column._id} className="h-5 hover:bg-gray-50">
+              <td className="text-start p-[10px] text-sm">{column.title}</td>
+              <td className="text-center p-[10px] text-sm">
+                {column.priority}
+              </td>
+              <td className="text-center p-[10px] text-sm ">
+                <div
+                  className={`${
+                    column.progress === "IN_PROGRESS"
+                      ? "text-[#1CB8F0] bg-[#E6F4FB]"
+                      : column.progress === "Not Started"
+                      ? "text-[#9C3233] bg-[#E0BFC0]"
+                      : column.progress === "COMPLETED"
+                      ? "text-[#000] bg-[rgba(64,64,64,0.38)]"
+                      : "text-[#61D766] bg-[#EDF6F0]"
+                  } w-[90%] h-[90%] p-[4px] text-xs rounded-md`}
+                >
+                  {column.progress}
+                </div>{" "}
+              </td>
+              <td>
+                <div className="flex justify-start items-center gap-[10px]">
+                  <Icons.edit className="hover:scale-110 transition-all cursor-pointer" />
+                  <Icons.trash
+                    className="hover:scale-110 transition-all cursor-pointer"
+                    onClick={() => delete_Task(column._id)}
+                  />
+                </div>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <p className="text-center ml-[20%] my-12 w-full text-xs">
+            sorry there are no tasks available. click on the create task button
+            to create a new task.
+          </p>
+        )}
       </tbody>
     </table>
   );

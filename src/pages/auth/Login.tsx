@@ -127,7 +127,7 @@ export default function Login() {
               {loading ? (
                 <ReactLoading color="#fff" type="spin" width={20} height={20} />
               ) : (
-                "Sign up"
+                "Sign in"
               )}
             </button>
 

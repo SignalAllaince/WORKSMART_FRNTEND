@@ -3,6 +3,7 @@ import { Icons } from "../icons";
 import { useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
 import { enqueueSnackbar } from "notistack";
+import { useEffect } from "react";
 
 interface ISideNav {
   label: string;
@@ -35,7 +36,7 @@ export default function SideNav() {
       iconActive: <Icons.requestActive />,
       label: "Request",
       link: "/dashboard/manager/request",
-    },
+    }
   ];
 
   const location = useLocation();
@@ -52,11 +53,22 @@ export default function SideNav() {
       navigate(link);
     }
   };
+
+  const logout = () => {
+    localStorage.removeItem("workSmartUser");
+    localStorage.removeItem("worksmart_jwt");
+    console.log('Logging out...');
+    navigate('/auth/register');
+    window.location.reload();  // Reload the page
+  };
+
+
+
   return (
     <div className="w-[17.29vw] px-5 fixed left-0 top-0 shadow-[4px_0px_20px_0px_rgba(0,0,0,0.05)] h-screen pt-28">
       {sideNavArr.map((navItem, index) => (
         <div
-          className={`${index > 1 && user.role === "Member" && "hidden"} cursor-pointer`}
+          className={`${index === 1 || index === 2 && user.role === "Member" && "hidden"} cursor-pointer`}
           onClick={() => handleClick(index, navItem.link)}
         >
           <div
@@ -74,6 +86,11 @@ export default function SideNav() {
           </div>
         </div>
       ))}
+
+      <button className="absolute bottom-0 left-0 flex justify-start p-[10px] gap-5 items-center mb-[10px] bg-primary-bold w-[90%] ml-[5%] rounded-[10px] text-white" onClick={logout}>
+        <Icons.logout/>
+        Logout
+      </button>
     </div>
   );
 }

@@ -71,13 +71,11 @@ export default function TaskTable({ tableRow, refresh }: IHomeTable) {
               <td className="text-center p-[10px] text-sm ">
                 <div
                   className={`${
-                    column.progress === "In Progress"
+                    column.progress === "IN_PROGRESS"
                       ? "text-[#1CB8F0] bg-[#E6F4FB]"
-                      : column.progress === "Not Started"
+                      : column.progress === "NOT STARTED"
                       ? "text-[#9C3233] bg-[#E0BFC0]"
-                      : column.progress === "Pending Approval"
-                      ? "text-[#D79A54] bg-[#F6F3F0]"
-                      : column.progress === "Completed"
+                      : column.progress === "COMPLETED"
                       ? "text-[#000] bg-[rgba(64,64,64,0.38)]"
                       : "text-[#61D766] bg-[#EDF6F0]"
                   } w-[90%] h-[90%] p-[4px] text-xs rounded-md`}
