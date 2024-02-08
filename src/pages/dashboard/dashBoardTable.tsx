@@ -52,7 +52,7 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
   }, [isSuccess]);
 
   return (
-    <table className="w-full">
+    <table className="w-full relative">
       <thead className="bg-primary-hover">
         <tr>
           <th className="p-[10px] text-sm text-start">Task</th>
@@ -61,9 +61,9 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
           <th className="text-sm">Edit</th>
         </tr>
       </thead>
-      <tbody>
-        {tableRow.length > 0 ? (
-          tableRow?.map((column, _index) => (
+      {tableRow.length > 1 ? (
+        <tbody>
+          {tableRow?.map((column, _index) => (
             <tr key={column._id} className="h-5 hover:bg-gray-50">
               <td className="text-start p-[10px] text-sm">{column.title}</td>
               <td className="text-center p-[10px] text-sm">
@@ -74,9 +74,9 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
                   className={`${
                     column.progress === "IN PROGRESS"
                       ? "text-[#1CB8F0] bg-[#E6F4FB]"
-                      // : column.progress === "Not Started"
+                      : // : column.progress === "Not Started"
                       // ? "text-[#9C3233] bg-[#E0BFC0]"
-                      : column.progress === "COMPLETED"
+                      column.progress === "COMPLETED"
                       ? "text-[#000] bg-[rgba(64,64,64,0.38)]"
                       : "text-[#61D766] bg-[#EDF6F0]"
                   } w-[90%] h-[90%] p-[4px] text-xs rounded-md`}
@@ -94,14 +94,18 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
                 </div>
               </td>
             </tr>
-          ))
-        ) : (
-          <p className="text-center ml-[20%] my-12 w-full text-xs">
-            sorry there are no tasks available. click on the create task button
-            to create a new task.
+          ))}
+        </tbody>
+      ) : (
+        <div className="absolute !w-full !mx-auto py-16 flex !justify-center items-center">
+          <p className="text-sm">
+            No task available{" "}
+            <em className="text-primary-bold">
+              click on the create task button to add a new task.
+            </em>
           </p>
-        )}
-      </tbody>
+        </div>
+      )}
     </table>
   );
 }

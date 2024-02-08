@@ -49,10 +49,10 @@ export default function Request() {
 
   const { mutate: approve } = useMutation(approveTask, {
     onSuccess: () => {
-      // enqueueSnackbar(`Task approved successfully`, {
-      //   variant: "success",
-      //   anchorOrigin: { vertical: "top", horizontal: "right" },
-      // });
+      enqueueSnackbar(`Task approved successfully`, {
+        variant: "success",
+        anchorOrigin: { vertical: "top", horizontal: "right" },
+      });
       closeModal();
       queryClient.invalidateQueries("requests"); // Invalidate the query to refresh the data
     },
