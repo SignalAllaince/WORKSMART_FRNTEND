@@ -45,7 +45,7 @@ export default function Home() {
   const allTasks = tasks.length;
 
   const inProgress = tasks.filter(
-    (task) => task.progress === "IN_PROGRESS"
+    (task) => task.progress === "IN PROGRESS"
   ).length;
 
   const completed = tasks.filter(

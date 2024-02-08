@@ -4,7 +4,6 @@ import { useMutation } from "react-query";
 import ApiFetcher from "../../services/ApiFetcher";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
-import { table } from "console";
 
 export interface IHomeTable {
   tableRow: ITask[];
@@ -73,10 +72,10 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
               <td className="text-center p-[10px] text-sm ">
                 <div
                   className={`${
-                    column.progress === "IN_PROGRESS"
+                    column.progress === "IN PROGRESS"
                       ? "text-[#1CB8F0] bg-[#E6F4FB]"
-                      : column.progress === "Not Started"
-                      ? "text-[#9C3233] bg-[#E0BFC0]"
+                      // : column.progress === "Not Started"
+                      // ? "text-[#9C3233] bg-[#E0BFC0]"
                       : column.progress === "COMPLETED"
                       ? "text-[#000] bg-[rgba(64,64,64,0.38)]"
                       : "text-[#61D766] bg-[#EDF6F0]"

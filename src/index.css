@@ -31,3 +31,17 @@
   outline: solid 1px #9C3233;
 }
 /* ----------------------------- */
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 5em; /* Adjust the max-width to your desired value */
+}
+
+.truncate_title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 8em; /* Adjust the max-width to your desired value */
+}

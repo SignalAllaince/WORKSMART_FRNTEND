@@ -84,7 +84,7 @@ export default function Task() {
       >
         <FlexCard>
           <div>
-            <h2 className="text-lg font-semibold text-black">Tasks</h2>
+            <h2 className="text-lg font-semibold text-black">Requests</h2>
             <p className="text-sm font-light">
               Here is a list of all your tasks.
             </p>

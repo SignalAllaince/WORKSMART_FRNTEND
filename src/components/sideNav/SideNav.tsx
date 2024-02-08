@@ -3,7 +3,6 @@ import { Icons } from "../icons";
 import { useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
 import { enqueueSnackbar } from "notistack";
-import { useEffect } from "react";
 
 interface ISideNav {
   label: string;

@@ -63,18 +63,18 @@ export default function TaskTable({ tableRow, refresh }: IHomeTable) {
         <tbody>
           {tableRow?.map((column, index) => (
             <tr key={index} className="h-16 hover:bg-gray-50">
-              <td className="p-2">{index + 1}</td>
-              <td className="text-center p-[10px] text-sm">{column.title}</td>
+              <td className="truncate p-2">{column._id}</td>
+              <td className="truncate_title text-center p-[10px] text-sm">{column.title}</td>
               <td className="text-center p-[10px] text-sm">
-                {column.approver}
+                {column.approver_name}
               </td>
               <td className="text-center p-[10px] text-sm ">
                 <div
                   className={`${
-                    column.progress === "IN_PROGRESS"
+                    column.progress === "IN PROGRESS"
                       ? "text-[#1CB8F0] bg-[#E6F4FB]"
-                      : column.progress === "NOT STARTED"
-                      ? "text-[#9C3233] bg-[#E0BFC0]"
+                      // : column.progress === "NOT STARTED"
+                      // ? "text-[#9C3233] bg-[#E0BFC0]"
                       : column.progress === "COMPLETED"
                       ? "text-[#000] bg-[rgba(64,64,64,0.38)]"
                       : "text-[#61D766] bg-[#EDF6F0]"
@@ -87,7 +87,7 @@ export default function TaskTable({ tableRow, refresh }: IHomeTable) {
                 {column.priority}
               </td>
               <td className="text-center p-[10px] text-sm">
-                {formatDate(column.dueDate)}
+                {formatDate(column.due_date)}
               </td>
               <td>
                 <div className="flex justify-start items-center gap-[10px]">

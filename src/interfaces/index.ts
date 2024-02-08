@@ -2,10 +2,23 @@ export interface ITask {
   _id: string;
   title: string;
   approver: string;
-  dueDate: Date | null;
+  approver_name:string;
+  due_date: Date | null;
   priority: string;
   description: string;
   progress: TaskProgress;
+}
+
+export interface ITaskRequest {
+  _id: string;
+  title: string;
+  approver: string;
+  approver_name:string;
+  due_date: Date | null;
+  priority: string;
+  description: string;
+  progress: TaskProgress;
+  ownerName:string;
 }
 
 export interface IMember {
@@ -19,7 +32,7 @@ export interface IMember {
 
 
 export enum TaskProgress {
-  IN_PROGRESS = "IN_PROGRESS",
+  IN_PROGRESS = "IN PROGRESS",
   COMPLETED = "COMPLETED",
   APPROVED = "APPROVED",
   NOT_STARTED="NOT_STARTED"

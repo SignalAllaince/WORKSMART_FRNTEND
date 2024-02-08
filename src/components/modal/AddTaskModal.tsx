@@ -67,7 +67,7 @@ export default function AddTaskModal({ onClose }: IAddTaskModal) {
       approver: approver && approver?._id,
       priority,
       due_date,
-      progress: "IN_PROGRESS",
+      progress: "IN PROGRESS",
     };
     const response = await ApiFetcher.post("/task/create", taskDetails);
     return response.data;
