@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import FlexCard from "../../components/flexCard/FlexCard";
 import Layout from "../../components/layout/Layout";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -7,6 +9,7 @@ import { formatDate } from "../../helpers/date";
 import { Icons } from "../../components/icons";
 import { useState } from "react";
 import { enqueueSnackbar } from "notistack";
+import ReactLoading from "react-loading";
 
 export default function Request() {
   const queryClient = useQueryClient();
@@ -36,16 +39,15 @@ export default function Request() {
       await ApiFetcher.patch(`/tasks/${taskId}/approve`, {
         task_progress: "APPROVED",
       });
-    } catch (error:any) {
+    } catch (error: any) {
       // Handle error
-      console.error('Error approving task:', error);
+      console.error("Error approving task:", error);
       enqueueSnackbar(`${error.response.data.message}`, {
         variant: "error",
         anchorOrigin: { vertical: "top", horizontal: "right" },
       });
     }
   };
-
 
   const { mutate: approve } = useMutation(approveTask, {
     onSuccess: () => {
@@ -91,60 +93,73 @@ export default function Request() {
               <th className="text-sm">Action</th>
             </tr>
           </thead>
-          <tbody>
-            {tasks_?.map((column, _index) => (
-              <tr key={column._id} className="h-16 relative hover:bg-gray-50">
-                <td className="p-2 text-sm">{column.ownerName}</td>
-                <td className="text-center p-[10px] text-sm">{column.title}</td>
-                <td className="text-center p-[10px] text-sm ">
-                  <div
-                    className={`${
-                      column.progress === "IN PROGRESS"
-                        ? "text-[#1CB8F0] bg-[#E6F4FB]"
-                        : // : column.progress === "NOT STARTED"
-                        // ? "text-[#9C3233] bg-[#E0BFC0]"
-                        column.progress === "COMPLETED"
-                        ? "text-[#000] bg-[rgba(64,64,64,0.38)]"
-                        : "text-[#61D766] bg-[#EDF6F0]"
-                    } w-[90%] h-[90%] p-[4px] text-xs rounded-md`}
-                  >
-                    {column.progress}
-                  </div>{" "}
-                </td>
-                <td className="text-center p-[10px] text-sm">
-                  {column.priority}
-                </td>
-                <td className="text-center p-[10px] text-sm">
-                  {formatDate(column.due_date)}
-                </td>
-                <td>
-                  <div className="flex justify-center items-center gap-[10px]">
-                    <Icons.dropdownCircle
-                      className="hover:scale-110 h-4 w-4 transition-all cursor-pointer"
-                      onClick={() => openModal(column._id)}
-                    />
-                  </div>
-                </td>
+          {query.isLoading ? (
+            <div className="w-full absolute h-72 flex justify-center items-center">
+              <ReactLoading
+                color="#9C3233"
+                type="spin"
+                width={50}
+                height={50}
+              />
+            </div>
+          ) : (
+            <tbody>
+              {tasks_?.map((column, _index) => (
+                <tr key={column._id} className="h-16 relative hover:bg-gray-50">
+                  <td className="p-2 text-sm">{column.ownerName}</td>
+                  <td className="text-center p-[10px] text-sm">
+                    {column.title}
+                  </td>
+                  <td className="text-center p-[10px] text-sm ">
+                    <div
+                      className={`${
+                        column.progress === "IN PROGRESS"
+                          ? "text-[#1CB8F0] bg-[#E6F4FB]"
+                          : column.progress === "PENDING APPROVAL"
+                          ? "text-[#D79A54] bg-[#F6F3F0]"
+                          : column.progress === "COMPLETED"
+                          ? "text-[#000] bg-[rgba(64,64,64,0.38)]"
+                          : "text-[#61D766] bg-[#EDF6F0]"
+                      } w-[90%] h-[90%] p-[4px] text-xs rounded-md`}
+                    >
+                      {column.progress}
+                    </div>{" "}
+                  </td>
+                  <td className="text-center p-[10px] text-sm">
+                    {column.priority}
+                  </td>
+                  <td className="text-center p-[10px] text-sm">
+                    {formatDate(column.due_date)}
+                  </td>
+                  <td>
+                    <div className="flex justify-center items-center gap-[10px]">
+                      <Icons.dropdownCircle
+                        className="hover:scale-110 h-4 w-4 transition-all cursor-pointer"
+                        onClick={() => openModal(column._id)}
+                      />
+                    </div>
+                  </td>
 
-                {selectedTaskId === column._id && (
-                  <div className="w-44 absolute right-0 top-12 z-40 bg-gray-100 border border-gray-300">
-                    <p
-                      className="text-sm py-1 px-2 hover:bg-green-100 cursor-pointer"
-                      onClick={() => approve(column._id)}
-                    >
-                      Approve
-                    </p>
-                    <p
-                      className="text-sm py-1 px-2 hover:bg-red-100 cursor-pointer"
-                      onClick={closeModal}
-                    >
-                      Reject
-                    </p>
-                  </div>
-                )}
-              </tr>
-            ))}
-          </tbody>
+                  {selectedTaskId === column._id && (
+                    <div className="w-44 absolute right-0 top-12 z-40 bg-gray-100 border border-gray-300">
+                      <p
+                        className="text-sm py-1 px-2 hover:bg-green-100 cursor-pointer"
+                        onClick={() => approve(column._id)}
+                      >
+                        Approve
+                      </p>
+                      <p
+                        className="text-sm py-1 px-2 hover:bg-red-100 cursor-pointer"
+                        onClick={closeModal}
+                      >
+                        Reject
+                      </p>
+                    </div>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
     </Layout>

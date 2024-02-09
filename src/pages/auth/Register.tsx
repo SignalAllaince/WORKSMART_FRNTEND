@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import ApiFetcher from "../../services/ApiFetcher";
 import ReactLoading from "react-loading";
@@ -10,12 +12,13 @@ import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/slices/userSlice";
 import { IUser } from "../../interfaces";
-import { bg } from "../../assets";
+import { bg, sath } from "../../assets";
 import { Link } from "react-router-dom";
 import BackDrop from "../../components/modal/BackDrop";
 import VerifyOtp from "./VerifyOtp";
 
 export default function Register() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_showVerifyOtpModal, setShowVerifyOtpModal] = useState<boolean>(false);
 
   // timer state for resend otp
@@ -192,7 +195,7 @@ export default function Register() {
       </div>
 
       <div className="w-full h-full left-0 top-0 absolute bg-[#0000006d] z-10"></div>
-      <div className="absolute left-0 top-0 w-full bg-red-600 h-full ">
+      <div className="absolute left-0 top-0 w-full h-full ">
         <img src={bg} className="w-full h-full object-cover" alt="" />
       </div>
 
@@ -201,6 +204,10 @@ export default function Register() {
           <VerifyOtp isTimerActive={isTimerActive} setIsTimerActive={setIsTimerActive} />
         </BackDrop>
       )}
+
+      <div className="w-44 h-16 absolute left-4 top-4 z-50">
+      <img src={sath} className="w-full h-full object-cover" alt="" />
+      </div>
     </div>
   );
 }

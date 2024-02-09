@@ -40,6 +40,7 @@ export default function Home() {
     refresh();
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const user: IUser = useSelector((state: any) => state.user.user);
 
   const allTasks = tasks.length;
@@ -118,10 +119,10 @@ export default function Home() {
           <div className="h-[5px] rounded-md w-full bg-primary-hover"></div>
         </div>
 
-        <div className="flex justify-start items-center mt-12  gap-3">
+        <div className="flex justify-start items-center mt-12 overflow-x-scroll gap-3">
           {[1, 2, 3, 4, 5, 6].map((_item, index) => (
             <div
-              className="w-[14.98vw] h-20 rounded-[10px] px-5 bg-grey-300 flex justify-start items-center gap-2 hover:bg-primary-hover transition-all hover:cursor-pointer"
+              className="min-w-[14.98vw] max-w-[14.98vw] h-20 rounded-[10px] px-5 bg-grey-300 flex justify-start items-center gap-2 hover:bg-primary-hover transition-all hover:cursor-pointer"
               key={index}
             >
               {index === 0 ? (

@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ITask } from "../../interfaces";
 import { Icons } from "../../components/icons";
 import { useMutation } from "react-query";
@@ -9,7 +12,10 @@ export interface IHomeTable {
   tableRow: ITask[];
   refresh: () => void;
 }
-export default function HomeTable({ tableRow, refresh }: IHomeTable) {
+export default function HomeTable({
+  tableRow,
+  refresh,
+}: IHomeTable) {
   const handleDelete = async (id: string) => {
     const response = await ApiFetcher.delete(`/task/${id}/delete`);
     return response.data;
@@ -82,6 +88,7 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
           variant: "success",
           anchorOrigin: { vertical: "top", horizontal: "right" },
         });
+        refresh();
       },
       onError: (error: any) => {
         if (Array.isArray(error.response.data.error)) {
@@ -111,7 +118,7 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
           <th className="text-sm">Edit</th>
         </tr>
       </thead>
-      {tableRow.length > 1 ? (
+      {tableRow.length > 0 ? (
         <tbody>
           {tableRow?.map((column, _index) => (
             <tr key={column._id} className="h-5 relative hover:bg-gray-50">
@@ -162,7 +169,7 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
           ))}
         </tbody>
       ) : (
-        <div className="absolute w-full h-full left-0 top-0 bg-black">
+        <div className="absolute w-full h-full left-0 top-0">
           <div className="absolute !w-full !mx-auto py-16 flex !justify-center items-center">
             <p className="text-sm">
               No task available{" "}

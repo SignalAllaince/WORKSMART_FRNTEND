@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useLocation, useNavigate } from "react-router-dom";
 import { Icons } from "../icons";
 import { useSelector } from "react-redux";
@@ -24,12 +25,12 @@ export default function SideNav() {
       label: "Task",
       link: "/dashboard/task",
     },
-    {
-      icon: <Icons.team />,
-      iconActive: <Icons.teamActive />,
-      label: "Team",
-      link: "/dashboard/manager/team",
-    },
+    // {
+    //   icon: <Icons.team />,
+    //   iconActive: <Icons.teamActive />,
+    //   label: "Team",
+    //   link: "/dashboard/manager/team",
+    // },
     {
       icon: <Icons.request />,
       iconActive: <Icons.requestActive />,
