@@ -56,9 +56,13 @@ export default function Home() {
     (task) => task.progress === "NOT_STARTED"
   ).length;
 
+  const PENDING_APPROVAL = tasks.filter(
+    (task) => task.progress === "PENDING APPROVAL"
+  ).length;
+
   const approved = tasks.filter((task) => task.progress === "APPROVED").length;
 
-  const chartData = [IN_PROGRESS, NOT_STARTED, COMPLETED, approved];
+  const chartData = [IN_PROGRESS, NOT_STARTED, COMPLETED, approved, PENDING_APPROVAL];
 
   const keys = [
     {
@@ -115,7 +119,7 @@ export default function Home() {
         </div>
 
         <div className="flex justify-start items-center mt-12  gap-3">
-          {[1, 2, 3, 4, 5].map((_item, index) => (
+          {[1, 2, 3, 4, 5, 6].map((_item, index) => (
             <div
               className="w-[14.98vw] h-20 rounded-[10px] px-5 bg-grey-300 flex justify-start items-center gap-2 hover:bg-primary-hover transition-all hover:cursor-pointer"
               key={index}
@@ -136,6 +140,10 @@ export default function Home() {
                 <p className="text-4xl text-primary-bold font-medium">
                   {NOT_STARTED}
                 </p>
+              ) : index === 4 ? (
+                <p className="text-4xl text-primary-bold font-medium">
+                  {PENDING_APPROVAL}
+                </p>
               ) : (
                 <p className="text-4xl text-primary-bold font-medium">
                   {approved}
@@ -150,6 +158,8 @@ export default function Home() {
                   ? "completed"
                   : index === 3
                   ? "Not Started"
+                  : index === 4
+                  ? "Pending Approval"
                   : "Approved"}
               </p>
             </div>
