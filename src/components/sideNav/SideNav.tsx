@@ -16,7 +16,7 @@ export default function SideNav() {
       icon: <Icons.dashboard />,
       iconActive: <Icons.dashboardActive />,
       label: "Dashboard",
-      link: "/dashboard",
+      link: "/",
     },
     {
       icon: <Icons.task />,
@@ -57,7 +57,7 @@ export default function SideNav() {
     localStorage.removeItem("workSmartUser");
     localStorage.removeItem("worksmart_jwt");
     console.log('Logging out...');
-    navigate('/auth/register');
+    navigate('/auth');
     window.location.reload();  // Reload the page
   };
 

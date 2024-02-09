@@ -35,6 +35,7 @@ export enum TaskProgress {
   IN_PROGRESS = "IN PROGRESS",
   COMPLETED = "COMPLETED",
   APPROVED = "APPROVED",
+  PENDING_APPROVAL = "PENDING APPROVAL",
   NOT_STARTED="NOT_STARTED"
 }
 export interface IUser {

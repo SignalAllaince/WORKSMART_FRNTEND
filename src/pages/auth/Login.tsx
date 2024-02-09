@@ -133,7 +133,7 @@ export default function Login() {
 
             <p className="text-center mt-4">
               Don't have an account?{" "}
-              <Link to="/auth/register" className="underline text-primary-bold">
+              <Link to="/auth" className="underline text-primary-bold">
                 register
               </Link>{" "}
               here

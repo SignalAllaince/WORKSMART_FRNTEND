@@ -60,7 +60,7 @@ export default function Register() {
 
   const handleRegister = async (userData: RegisterInput) => {
     setLoading(true);
-    const response = await ApiFetcher.post("/auth/register", userData);
+    const response = await ApiFetcher.post("/auth", userData);
     return response.data;
   };
 

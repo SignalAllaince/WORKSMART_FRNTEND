@@ -44,28 +44,21 @@ export default function Home() {
 
   const allTasks = tasks.length;
 
-  const inProgress = tasks.filter(
+  const IN_PROGRESS = tasks.filter(
     (task) => task.progress === "IN PROGRESS"
   ).length;
 
-  const completed = tasks.filter(
+  const COMPLETED = tasks.filter(
     (task) => task.progress === "COMPLETED"
   ).length;
 
-  const notStarted = tasks.filter(
+  const NOT_STARTED = tasks.filter(
     (task) => task.progress === "NOT_STARTED"
   ).length;
 
-  const approved = tasks.filter(
-    (task) => task.progress === "APPROVED"
-  ).length;
+  const approved = tasks.filter((task) => task.progress === "APPROVED").length;
 
-  const chartData = [
-    inProgress,
-    notStarted,
-    completed,
-    approved,
-  ];
+  const chartData = [IN_PROGRESS, NOT_STARTED, COMPLETED, approved];
 
   const keys = [
     {
@@ -85,7 +78,7 @@ export default function Home() {
       color: "#000",
     },
     {
-      label: "Approved",
+      label: "APPROVED",
       color: "#61D766",
     },
   ];
@@ -133,15 +126,15 @@ export default function Home() {
                 </p>
               ) : index === 1 ? (
                 <p className="text-4xl text-primary-bold font-medium">
-                  {inProgress}
+                  {IN_PROGRESS}
                 </p>
               ) : index === 2 ? (
                 <p className="text-4xl text-primary-bold font-medium">
-                  {completed}
+                  {COMPLETED}
                 </p>
               ) : index === 3 ? (
                 <p className="text-4xl text-primary-bold font-medium">
-                  {notStarted}
+                  {NOT_STARTED}
                 </p>
               ) : (
                 <p className="text-4xl text-primary-bold font-medium">
