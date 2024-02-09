@@ -65,7 +65,41 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
     }
   };
 
-  
+  const changeTaskToInProgress = async (id: string) => {
+    const response = await ApiFetcher.put(`/task/${id}/progress`, {
+      progress: "IN PROGRESS",
+    });
+    return response.data;
+  };
+
+  const { mutate: changeToInProgress } = useMutation(
+    (id: string) => {
+      return changeTaskToInProgress(id); // Make sure to return the result of handleDelete
+    },
+    {
+      onSuccess: (data) => {
+        enqueueSnackbar(`${data.message}`, {
+          variant: "success",
+          anchorOrigin: { vertical: "top", horizontal: "right" },
+        });
+      },
+      onError: (error: any) => {
+        if (Array.isArray(error.response.data.error)) {
+          error.response.data.error.forEach((el: any) =>
+            enqueueSnackbar(`${el.message}`, {
+              variant: "error",
+              anchorOrigin: { vertical: "top", horizontal: "right" },
+            })
+          );
+        } else {
+          enqueueSnackbar(`${error.response.data.message}`, {
+            variant: "error",
+            anchorOrigin: { vertical: "top", horizontal: "right" },
+          });
+        }
+      },
+    }
+  );
 
   return (
     <table className="w-full relative table" onClick={closeModal_}>
@@ -80,7 +114,7 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
       {tableRow.length > 1 ? (
         <tbody>
           {tableRow?.map((column, _index) => (
-            <tr key={column._id} className="h-5 hover:bg-gray-50">
+            <tr key={column._id} className="h-5 relative hover:bg-gray-50">
               <td className="text-start p-[10px] text-sm">{column.title}</td>
               <td className="text-center p-[10px] text-sm">
                 {column.priority}
@@ -114,10 +148,11 @@ export default function HomeTable({ tableRow, refresh }: IHomeTable) {
                 </div>
               </td>
               {startTask === column._id && (
-                <div className="w-24 absolute flex justify-center items-center right-0 top-20 z-40 bg-gray-100 border border-gray-300">
+                <div className="w-24 absolute flex justify-center items-center right-0 top-10 z-40 bg-gray-100 border border-gray-300">
                   <button
                     disabled={column.progress !== "APPROVED"}
                     className="text-sm py-1 px-2 cursor-pointer disabled:cursor-not-allowed"
+                    onClick={() => changeToInProgress(column._id)}
                   >
                     Start Task
                   </button>
